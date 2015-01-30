@@ -49,19 +49,25 @@ int main(int argc, char *argv[])
     int r,g,b;
     QColor color;
 
-    for(int x=radius/2; x<newImage->width()-(radius/2); x++){
-        for(int y=radius/2; y<newImage->height()-(radius/2); y++){
+    for(int x = 0; x<newImage->width(); x++){
+        for(int y = 0; y<newImage->height(); y++){
 
             r = 0;
             g = 0;
             b = 0;
 
-            for(int i = -radius/2; i<= radius/2; i++){
-                for(int j = -radius/2; j<= radius/2; j++){
-                    color = QColor(myImage->pixel(x+i, y+j));
-                    r += color.red()*kernel[radius/2+i][radius/2+j];
-                    g += color.green()*kernel[radius/2+i][radius/2+j];
-                    b += color.blue()*kernel[radius/2+i][radius/2+j];
+            int xKernelStart, xKernelEnd, yKernelStart, yKernelEnd;
+            xKernelStart = qBound(0, x - (radius/2), newImage->width() - 1 - (radius/2));
+            yKernelStart = qBound(0, y - (radius/2), newImage->height() - 1 - (radius/2));
+            xKernelEnd = qBound(x + radius/2, x + radius/2, newImage->width() - 1);
+            yKernelEnd = qBound(y + radius/2, y + radius/2, newImage->width() - 1);
+
+            for(int i = xKernelStart; i <= xKernelEnd; i++) {
+                for(int j = yKernelStart; j <= yKernelEnd; j++) {
+                    color = QColor(myImage->pixel(x, y));
+                    r += color.red()*kernel[i][j];
+                    g += color.green()*kernel[i][j];
+                    b += color.blue()*kernel[i][j];
                 }
             }
 
